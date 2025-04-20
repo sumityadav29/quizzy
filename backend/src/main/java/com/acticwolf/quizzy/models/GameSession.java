@@ -1,0 +1,49 @@
+package com.acticwolf.quizzy.models;
+
+import ch.qos.logback.core.joran.spi.EventPlayer;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "game_sessions")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class GameSession {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "quiz_id")
+    private Quiz quiz;
+
+    @Enumerated(EnumType.STRING)
+    private SessionStatus status;
+
+    @OneToOne
+    @JoinColumn(name = "current_question_id")
+    private Question currentQuestion;
+
+    private Timestamp startedAt;
+
+    private Timestamp endedAt;
+
+    @Column(unique = true, length = 6)
+    private String roomCode;
+
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EventPlayer> players = new ArrayList<>();
+
+    public enum SessionStatus {
+        WAITING,
+        IN_PROGRESS,
+        FINISHED
+    }
+}
