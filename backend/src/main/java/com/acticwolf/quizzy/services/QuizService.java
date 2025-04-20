@@ -5,5 +5,5 @@ import com.acticwolf.quizzy.dtos.QuizDetailResponseDto;
 
 public interface QuizService {
     QuizDetailResponseDto createQuiz(CreateQuizRequestDto request);
-    QuizDetailResponseDto getQuizById(Integer id);
+    QuizDetailResponseDto getQuizDetailById(Integer id);
 }
