@@ -1,6 +1,5 @@
 package com.acticwolf.quizzy.models;
 
-import ch.qos.logback.core.joran.spi.EventPlayer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,7 +38,7 @@ public class GameSession {
     private String roomCode;
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EventPlayer> players = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
 
     public enum SessionStatus {
         WAITING,
