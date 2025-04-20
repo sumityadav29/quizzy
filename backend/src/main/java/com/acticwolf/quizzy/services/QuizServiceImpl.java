@@ -42,23 +42,23 @@ public class QuizServiceImpl implements QuizService {
 
         List<QuestionResponseDto> questionResponseDtos = quiz.getQuestions()
                 .stream()
-                .map(q -> new QuestionResponseDto(
-                        q.getId(),
-                        q.getQuestionText(),
-                        parseJsonArray(q.getOptionsJson()),
-                        q.getCorrectOption(),
-                        q.getCreatedAt()
-                ))
+                .map(q -> QuestionResponseDto.builder()
+                        .id(q.getId())
+                        .questionText(q.getQuestionText())
+                        .options(parseJsonArray(q.getOptionsJson()))
+                        .correctOption(q.getCorrectOption())
+                        .createdAt(q.getCreatedAt())
+                        .build())
                 .collect(Collectors.toList());
 
-        return new QuizDetailResponseDto(
-                quiz.getId(),
-                quiz.getTitle(),
-                quiz.getDescription(),
-                quiz.getCreatedBy(),
-                quiz.getCreatedAt(),
-                questionResponseDtos
-        );
+        return QuizDetailResponseDto.builder()
+                .id(quiz.getId())
+                .title(quiz.getTitle())
+                .description(quiz.getDescription())
+                .createdBy(quiz.getCreatedBy())
+                .questions(questionResponseDtos)
+                .createdAt(quiz.getCreatedAt())
+                .build();
     }
 
     private List<String> parseJsonArray(String jsonArray) {
