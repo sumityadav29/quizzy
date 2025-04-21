@@ -2,11 +2,11 @@ import React from 'react';
 import { Routes, Route } from 'react-router';
 
 import LandingPage from './pages/LandingPage';
-import JoinExistingGamePage from './pages/JoinExistingGamePage';
-import StartNewGamePage from './pages/StartNewGamePage';
-import GamePlayPage from './pages/GamePlayPage';
-import CreateQuizPage from './pages/CreateQuizPage';
-import AddQuestionsPage from './pages/AddQuestionsPage';
+import JoinExistingGamePage from './pages/gameplayer/JoinExistingGamePage';
+import StartNewGamePage from './pages/gamehost/StartNewGamePage';
+import GamePlayPage from './pages/gameplayer/GamePlayPage';
+import CreateQuizPage from './pages/quizadmin/CreateQuizPage';
+import AddQuestionsPage from './pages/quizadmin/AddQuestionsPage';
 
 const App: React.FC = () => {
   return (

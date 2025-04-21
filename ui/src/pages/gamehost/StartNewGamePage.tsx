@@ -5,7 +5,7 @@ import {
   QuizControllerApi,
   CreateGameSessionRequestDto,
   PaginatedQuizResponseDto,
-} from '../api/quizzy';
+} from '../../api/quizzy';
 import './StartNewGamePage.css';
 
 const StartNewGamePage: React.FC = () => {

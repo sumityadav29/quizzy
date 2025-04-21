@@ -4,7 +4,7 @@ import {
   GameSessionControllerApi,
   JoinGameSessionRequestDto,
   JoinGameSessionResponseDto,
-} from '../api/quizzy';
+} from '../../api/quizzy';
 import './JoinExistingGamePage.css';
 
 const JoinExistingGamePage: React.FC = () => {

@@ -5,9 +5,9 @@ import {
   LiveQuestionResponseDto,
   SubmitAnswerRequestDto,
   SubmitAnswerResponseDto,
-} from '../api/quizzy';
+} from '../../api/quizzy';
 
-import LeaderboardPage from './LeaderboardPage';
+import LeaderboardPage from '../../components/LeaderboardPage';
 
 import './GamePlayPage.css';
 

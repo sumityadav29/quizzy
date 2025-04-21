@@ -5,7 +5,7 @@ import {
   AddQuestionRequestDto,
   QuizDetailResponseDto,
   QuestionResponseDto,
-} from '../api/quizzy';
+} from '../../api/quizzy';
 
 import './AddQuestionsPage.css';
 

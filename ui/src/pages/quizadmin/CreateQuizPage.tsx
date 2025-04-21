@@ -4,7 +4,7 @@ import {
   QuizControllerApi,
   CreateQuizRequestDto,
   QuizDetailResponseDto,
-} from '../api/quizzy';
+} from '../../api/quizzy';
 
 import './CreateQuizPage.css';
 
