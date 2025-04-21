@@ -129,6 +129,7 @@ public class GameSessionServiceImpl implements GameSessionService {
                 .id(nextQuestion.getId())
                 .questionText(nextQuestion.getQuestionText())
                 .options(parseJsonArray(nextQuestion.getOptionsJson()))
+                .maximumAllowedTime(session.getRoundTime())
                 .build();
 
         sseService.sendToSession(sessionId, "NEXT_QUESTION", dto);

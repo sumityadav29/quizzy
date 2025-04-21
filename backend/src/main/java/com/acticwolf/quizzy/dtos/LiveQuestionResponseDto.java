@@ -15,4 +15,5 @@ public class LiveQuestionResponseDto {
     private Integer id;
     private String questionText;
     private List<String> options;
+    private Integer maximumAllowedTime;
 }
