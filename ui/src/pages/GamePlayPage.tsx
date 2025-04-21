@@ -17,6 +17,8 @@ const GamePlayPage: React.FC = () => {
   const playerToken = localStorage.getItem('playerToken');
   const roomCode = localStorage.getItem('roomCode');
 
+  const isHost = localStorage.getItem('isHost') === 'true';
+
   const sessionApi = new GameSessionControllerApi();
 
   useEffect(() => {
@@ -67,6 +69,35 @@ const GamePlayPage: React.FC = () => {
     }
   };
 
+  const handleStartQuiz = async () => {
+    try {
+      if (!sessionId) return;
+      await sessionApi.startSession(Number(sessionId));
+      console.log('Quiz started');
+      await handleNextQuestion();
+    } catch (err) {
+      console.error('Failed to start quiz', err);
+    }
+  };
+  
+  const handleNextQuestion = async () => {
+    try {
+      if (!sessionId) return;
+      await sessionApi.sendNextQuestion(Number(sessionId));
+      console.log('Sent next question');
+    } catch (err) {
+      console.error('Failed to send next question', err);
+    }
+  };
+  
+  const handleEndQuiz = async () => {
+    try {
+      alert('Ending quiz');
+    } catch (err) {
+      console.error('Failed to end quiz', err);
+    }
+  };
+
   return (
     <div>
       <h2>Quiz Game</h2>
@@ -104,6 +135,18 @@ const GamePlayPage: React.FC = () => {
               {response.correct ? '✅ Correct!' : '❌ Incorrect.'} Response time:{' '}
               {response.responseTime}ms
             </p>
+          )}
+
+          {isHost && (
+            <div style={{ marginTop: '1rem' }}>
+              {!question && (
+                <button onClick={handleStartQuiz}>Start Quiz</button>
+              )}
+              {question && (
+                <button onClick={handleNextQuestion}>Next Question</button>
+              )}
+              <button onClick={handleEndQuiz}>End Quiz</button>
+            </div>
           )}
         </div>
       )}

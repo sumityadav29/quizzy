@@ -37,6 +37,8 @@ const StartNewGamePage: React.FC = () => {
       localStorage.setItem('roomCode', res.data.roomCode || '');
       localStorage.setItem('sessionId', String(res.data.id));
 
+      localStorage.setItem('isHost', 'true');
+
       navigate('/game');
     } catch (err) {
       setError('Failed to create game session.');
