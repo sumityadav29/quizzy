@@ -43,12 +43,19 @@ public class GameSession {
     @JoinColumn(name = "winner")
     private Player winner;
 
+    @Column(name = "round_time")
+    private Integer roundTime = 30;
+
+    @Column(name = "round_cooldown_time")
+    private Integer roundCooldownTime = 10;
+
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Player> players = new ArrayList<>();
 
     public enum SessionStatus {
         WAITING,
         IN_PROGRESS,
+        SHOWING_LEADERBOARD,
         FINISHED
     }
 }

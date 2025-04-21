@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateGameSessionRequestDto {
     private Integer quizId;
+    private Integer roundTime;
+    private Integer roundCooldownTime;
 }

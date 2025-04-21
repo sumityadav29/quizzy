@@ -36,6 +36,8 @@ public class GameSessionServiceImpl implements GameSessionService {
         session.setQuiz(quiz);
         session.setRoomCode(roomCode);
         session.setStatus(GameSession.SessionStatus.WAITING);
+        session.setRoundTime(Optional.ofNullable(requestDto.getRoundTime()).orElse(30));
+        session.setRoundCooldownTime(Optional.ofNullable(requestDto.getRoundCooldownTime()).orElse(10));
         session.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
         GameSession saved = gameSessionRepository.save(session);
