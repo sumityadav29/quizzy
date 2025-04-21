@@ -1,26 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from 'react-router';
 
-function App() {
+import LandingPage from './pages/LandingPage';
+import JoinExistingGamePage from './pages/JoinExistingGamePage';
+import StartNewGamePage from './pages/StartNewGamePage';
+import GamePlayPage from './pages/GamePlayPage';
+
+const App: React.FC = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/join" element={<JoinExistingGamePage />} />
+        <Route path="/host" element={<StartNewGamePage />} />
+        <Route path="/game" element={<GamePlayPage />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;
