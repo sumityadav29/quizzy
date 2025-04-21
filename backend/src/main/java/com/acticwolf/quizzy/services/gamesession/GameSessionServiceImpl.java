@@ -1,16 +1,14 @@
-package com.acticwolf.quizzy.services;
+package com.acticwolf.quizzy.services.gamesession;
 
-import com.acticwolf.quizzy.dtos.*;
+import com.acticwolf.quizzy.dtos.gamesession.*;
 import com.acticwolf.quizzy.models.*;
 import com.acticwolf.quizzy.repositories.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

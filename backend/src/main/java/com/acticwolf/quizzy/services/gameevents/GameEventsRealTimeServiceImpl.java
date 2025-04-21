@@ -1,7 +1,7 @@
-package com.acticwolf.quizzy.services;
+package com.acticwolf.quizzy.services.gameevents;
 
-import com.acticwolf.quizzy.dtos.LeaderboardEntryDto;
-import com.acticwolf.quizzy.dtos.LiveQuestionResponseDto;
+import com.acticwolf.quizzy.dtos.gameevents.LeaderboardEntryDto;
+import com.acticwolf.quizzy.dtos.gameevents.LiveQuestionResponseDto;
 import com.acticwolf.quizzy.models.GameSession;
 import com.acticwolf.quizzy.models.Question;
 import com.acticwolf.quizzy.repositories.*;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class GameSessionRealTimeServiceImpl implements GameSessionRealTimeService {
+public class GameEventsRealTimeServiceImpl implements GameEventsRealTimeService {
 
     private final GameSseService gameSseService;
     private final ObjectMapper objectMapper;

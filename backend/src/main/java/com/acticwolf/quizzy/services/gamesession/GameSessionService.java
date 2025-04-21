@@ -1,8 +1,6 @@
-package com.acticwolf.quizzy.services;
+package com.acticwolf.quizzy.services.gamesession;
 
-import com.acticwolf.quizzy.dtos.*;
-
-import java.util.List;
+import com.acticwolf.quizzy.dtos.gamesession.*;
 
 public interface GameSessionService {
 

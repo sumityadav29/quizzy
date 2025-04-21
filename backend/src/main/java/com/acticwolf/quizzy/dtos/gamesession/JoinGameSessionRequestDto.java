@@ -1,4 +1,4 @@
-package com.acticwolf.quizzy.dtos;
+package com.acticwolf.quizzy.dtos.gamesession;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubmitAnswerResponseDto {
-    private boolean correct;
-    private long responseTime;
+public class JoinGameSessionRequestDto {
+    private String nickname;
 }

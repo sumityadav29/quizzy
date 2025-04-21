@@ -1,11 +1,11 @@
-package com.acticwolf.quizzy.services;
+package com.acticwolf.quizzy.services.gameevents;
 
-import com.acticwolf.quizzy.dtos.LeaderboardEntryDto;
-import com.acticwolf.quizzy.dtos.LiveQuestionResponseDto;
+import com.acticwolf.quizzy.dtos.gameevents.LeaderboardEntryDto;
+import com.acticwolf.quizzy.dtos.gameevents.LiveQuestionResponseDto;
 
 import java.util.List;
 
-public interface GameSessionRealTimeService {
+public interface GameEventsRealTimeService {
 
     public LiveQuestionResponseDto sendNextQuestion(Integer sessionId);
 

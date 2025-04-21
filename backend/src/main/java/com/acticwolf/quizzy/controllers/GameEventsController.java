@@ -4,7 +4,7 @@ import com.acticwolf.quizzy.models.GameSession;
 import com.acticwolf.quizzy.models.Player;
 import com.acticwolf.quizzy.repositories.GameSessionRepository;
 import com.acticwolf.quizzy.repositories.PlayerRepository;
-import com.acticwolf.quizzy.services.GameSseService;
+import com.acticwolf.quizzy.services.gameevents.GameSseService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RestController
 @RequestMapping("api/v1/events")
 @RequiredArgsConstructor
-public class SseController {
+public class GameEventsController {
 
     private final PlayerRepository playerRepository;
     private final GameSessionRepository gameSessionRepository;

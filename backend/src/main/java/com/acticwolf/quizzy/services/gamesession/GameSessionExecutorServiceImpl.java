@@ -1,10 +1,13 @@
-package com.acticwolf.quizzy.services;
+package com.acticwolf.quizzy.services.gamesession;
 
-import com.acticwolf.quizzy.dtos.LeaderboardEntryDto;
+import com.acticwolf.quizzy.dtos.gameevents.LeaderboardEntryDto;
 import com.acticwolf.quizzy.models.GameSession;
 import com.acticwolf.quizzy.models.Question;
 import com.acticwolf.quizzy.models.Quiz;
 import com.acticwolf.quizzy.repositories.*;
+import com.acticwolf.quizzy.services.gameevents.GameEventsRealTimeService;
+import com.acticwolf.quizzy.services.gameevents.GameEventsRealTimeServiceImpl;
+import com.acticwolf.quizzy.services.gameevents.GameSseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +21,14 @@ public class GameSessionExecutorServiceImpl implements GameSessionExecutorServic
 
     private final GameSseService gameSseService;
     private final GameSessionRepository gameSessionRepository;
-    private final GameSessionRealTimeService gameSessionRealTimeService;
+    private final GameEventsRealTimeService gameEventsRealTimeService;
 
     public void runQuizSession(GameSession session) {
         session.setStatus(GameSession.SessionStatus.IN_PROGRESS);
         session.setStartedAt(new Timestamp(System.currentTimeMillis()));
         session.setCurrentQuestion(null);
         gameSessionRepository.save(session);
-        gameSseService.sendToSession(session.getId(), GameSessionRealTimeServiceImpl.GameEvent.QUIZ_STARTED, Map.of());
+        gameSseService.sendToSession(session.getId(), GameEventsRealTimeServiceImpl.GameEvent.QUIZ_STARTED, Map.of());
 
         Quiz quiz = session.getQuiz();
         List<Question> questions = quiz.getQuestions();
@@ -37,20 +40,20 @@ public class GameSessionExecutorServiceImpl implements GameSessionExecutorServic
 
             session.setStatus(GameSession.SessionStatus.IN_PROGRESS);
             gameSessionRepository.save(session);
-            gameSessionRealTimeService.sendNextQuestion(session.getId());
+            gameEventsRealTimeService.sendNextQuestion(session.getId());
             sleepSeconds(roundTime);
 
             session.setStatus(GameSession.SessionStatus.SHOWING_LEADERBOARD);
             gameSessionRepository.save(session);
-            gameSessionRealTimeService.sendLeaderBoardToSession(session.getId());
+            gameEventsRealTimeService.sendLeaderBoardToSession(session.getId());
             sleepSeconds(cooldownTime);
         }
 
         session.setStatus(GameSession.SessionStatus.FINISHED);
         gameSessionRepository.save(session);
 
-        List<LeaderboardEntryDto> leaderboard = gameSessionRealTimeService.getLeaderboard(session.getId());
-        gameSseService.sendToSession(session.getId(), GameSessionRealTimeServiceImpl.GameEvent.QUIZ_ENDED, leaderboard);
+        List<LeaderboardEntryDto> leaderboard = gameEventsRealTimeService.getLeaderboard(session.getId());
+        gameSseService.sendToSession(session.getId(), GameEventsRealTimeServiceImpl.GameEvent.QUIZ_ENDED, leaderboard);
     }
 
     private void sleepSeconds(int seconds) {

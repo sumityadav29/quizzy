@@ -1,5 +1,4 @@
-package com.acticwolf.quizzy.dtos;
-
+package com.acticwolf.quizzy.dtos.gamesession;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LeaderboardEntryDto {
-
-    private String nickname;
-    private int score;
-
+public class SubmitAnswerRequestDto {
+    private String playerToken;
+    private Integer selectedIndex;
 }

@@ -1,4 +1,4 @@
-package com.acticwolf.quizzy.dtos;
+package com.acticwolf.quizzy.dtos.gamesession;
 
 import com.acticwolf.quizzy.models.GameSession;
 import lombok.AllArgsConstructor;

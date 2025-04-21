@@ -1,6 +1,6 @@
-package com.acticwolf.quizzy.services;
+package com.acticwolf.quizzy.services.quiz;
 
-import com.acticwolf.quizzy.dtos.*;
+import com.acticwolf.quizzy.dtos.quiz.*;
 import com.acticwolf.quizzy.models.Question;
 import com.acticwolf.quizzy.models.Quiz;
 import com.acticwolf.quizzy.repositories.QuestionRepository;

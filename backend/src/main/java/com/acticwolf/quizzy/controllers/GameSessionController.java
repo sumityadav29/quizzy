@@ -1,8 +1,10 @@
 package com.acticwolf.quizzy.controllers;
 
-import com.acticwolf.quizzy.dtos.*;
-import com.acticwolf.quizzy.services.GameSessionRealTimeService;
-import com.acticwolf.quizzy.services.GameSessionService;
+import com.acticwolf.quizzy.dtos.gamesession.*;
+import com.acticwolf.quizzy.dtos.gameevents.LeaderboardEntryDto;
+import com.acticwolf.quizzy.dtos.gameevents.LiveQuestionResponseDto;
+import com.acticwolf.quizzy.services.gameevents.GameEventsRealTimeService;
+import com.acticwolf.quizzy.services.gamesession.GameSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,7 @@ import java.util.List;
 public class GameSessionController {
 
     private final GameSessionService gameSessionService;
-    private final GameSessionRealTimeService gameSessionRealTimeService;
+    private final GameEventsRealTimeService gameEventsRealTimeService;
 
     @PostMapping
     public ResponseEntity<CreateGameSessionResponseDto> createSession(
@@ -41,7 +43,7 @@ public class GameSessionController {
 
     @PostMapping("/{id}/questions/next")
     public ResponseEntity<LiveQuestionResponseDto> sendNextQuestion(@PathVariable Integer id) {
-        LiveQuestionResponseDto dto = gameSessionRealTimeService.sendNextQuestion(id);
+        LiveQuestionResponseDto dto = gameEventsRealTimeService.sendNextQuestion(id);
         return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.noContent().build();
     }
 
@@ -56,7 +58,7 @@ public class GameSessionController {
 
     @GetMapping("/{id}/leaderboard")
     public List<LeaderboardEntryDto> getLeaderboard(@PathVariable Integer id) {
-        return gameSessionRealTimeService.getLeaderboard(id);
+        return gameEventsRealTimeService.getLeaderboard(id);
     }
 
 }

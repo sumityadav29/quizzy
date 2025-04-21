@@ -1,7 +1,10 @@
 package com.acticwolf.quizzy.controllers;
 
-import com.acticwolf.quizzy.dtos.*;
-import com.acticwolf.quizzy.services.QuizService;
+import com.acticwolf.quizzy.dtos.quiz.AddQuestionRequestDto;
+import com.acticwolf.quizzy.dtos.quiz.CreateQuizRequestDto;
+import com.acticwolf.quizzy.dtos.quiz.PaginatedQuizResponseDto;
+import com.acticwolf.quizzy.dtos.quiz.QuizDetailResponseDto;
+import com.acticwolf.quizzy.services.quiz.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

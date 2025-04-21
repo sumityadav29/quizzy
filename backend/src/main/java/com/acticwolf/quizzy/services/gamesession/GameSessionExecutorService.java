@@ -1,4 +1,4 @@
-package com.acticwolf.quizzy.services;
+package com.acticwolf.quizzy.services.gamesession;
 
 import com.acticwolf.quizzy.models.GameSession;
 

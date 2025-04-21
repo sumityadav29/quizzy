@@ -1,4 +1,4 @@
-package com.acticwolf.quizzy.services;
+package com.acticwolf.quizzy.services.gameevents;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -27,7 +27,7 @@ public class GameSseServiceImpl implements GameSseService {
     }
 
     @Override
-    public void sendToSession(Integer sessionId, GameSessionRealTimeServiceImpl.GameEvent eventKey, Object data) {
+    public void sendToSession(Integer sessionId, GameEventsRealTimeServiceImpl.GameEvent eventKey, Object data) {
         Map<Integer, SseEmitter> emitters = sessionEmitters.getOrDefault(sessionId, Map.of());
 
         for (SseEmitter emitter : emitters.values()) {
@@ -40,7 +40,7 @@ public class GameSseServiceImpl implements GameSseService {
     }
 
     @Override
-    public void sendToPlayer(Integer sessionId, Integer playerId, GameSessionRealTimeServiceImpl.GameEvent eventKey, Object data) {
+    public void sendToPlayer(Integer sessionId, Integer playerId, GameEventsRealTimeServiceImpl.GameEvent eventKey, Object data) {
         Map<Integer, SseEmitter> emitters = sessionEmitters.getOrDefault(sessionId, Map.of());
         SseEmitter emitter = emitters.get(playerId);
 

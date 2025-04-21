@@ -1,4 +1,4 @@
-package com.acticwolf.quizzy.dtos;
+package com.acticwolf.quizzy.dtos.quiz;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
