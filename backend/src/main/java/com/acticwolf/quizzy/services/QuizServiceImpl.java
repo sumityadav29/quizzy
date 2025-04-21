@@ -1,9 +1,6 @@
 package com.acticwolf.quizzy.services;
 
-import com.acticwolf.quizzy.dtos.AddQuestionRequestDto;
-import com.acticwolf.quizzy.dtos.CreateQuizRequestDto;
-import com.acticwolf.quizzy.dtos.QuestionResponseDto;
-import com.acticwolf.quizzy.dtos.QuizDetailResponseDto;
+import com.acticwolf.quizzy.dtos.*;
 import com.acticwolf.quizzy.models.Question;
 import com.acticwolf.quizzy.models.Quiz;
 import com.acticwolf.quizzy.repositories.QuestionRepository;
@@ -12,6 +9,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -85,6 +85,31 @@ public class QuizServiceImpl implements QuizService {
         Question savedQuestion = questionRepository.save(question);
 
         return getQuizDetailById(quizId);
+    }
+
+    @Override
+    public PaginatedQuizResponseDto getAllQuizzes(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Quiz> quizPage = quizRepository.findAll(pageRequest);
+
+        List<QuizListResponseDto> quizzes = quizPage.getContent().stream()
+                .map(quiz -> QuizListResponseDto.builder()
+                        .id(quiz.getId())
+                        .title(quiz.getTitle())
+                        .description(quiz.getDescription())
+                        .createdBy(quiz.getCreatedBy())
+                        .createdAt(quiz.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+
+        return PaginatedQuizResponseDto.builder()
+                .quizzes(quizzes)
+                .page(quizPage.getNumber())
+                .size(quizPage.getSize())
+                .totalElements(quizPage.getTotalElements())
+                .totalPages(quizPage.getTotalPages())
+                .last(quizPage.isLast())
+                .build();
     }
 
     private List<String> parseJsonArray(String jsonArray) {

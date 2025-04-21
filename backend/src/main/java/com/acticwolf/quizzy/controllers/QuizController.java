@@ -1,12 +1,8 @@
 package com.acticwolf.quizzy.controllers;
 
-import com.acticwolf.quizzy.dtos.AddQuestionRequestDto;
-import com.acticwolf.quizzy.dtos.CreateQuizRequestDto;
-import com.acticwolf.quizzy.dtos.QuestionResponseDto;
-import com.acticwolf.quizzy.dtos.QuizDetailResponseDto;
+import com.acticwolf.quizzy.dtos.*;
 import com.acticwolf.quizzy.services.QuizService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +32,13 @@ public class QuizController {
             @RequestBody AddQuestionRequestDto requestDto) {
         QuizDetailResponseDto responseDto = quizService.addQuestionToQuiz(quizId, requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<PaginatedQuizResponseDto> getAllQuizzes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        PaginatedQuizResponseDto response = quizService.getAllQuizzes(page, size);
+        return ResponseEntity.ok(response);
     }
 }
