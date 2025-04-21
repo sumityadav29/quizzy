@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
   GameSessionControllerApi,
+  LeaderboardEntryDto,
   LiveQuestionResponseDto,
   SubmitAnswerRequestDto,
   SubmitAnswerResponseDto,
 } from '../api/quizzy';
+
+import LeaderboardPage from './LeaderboardPage';
 
 import './GamePlayPage.css';
 
@@ -16,6 +19,9 @@ const GamePlayPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [canSubmit, setCanSubmit] = useState<boolean>(true);
+
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntryDto[]>([]);
 
   const sessionId = localStorage.getItem('sessionId');
   const playerToken = localStorage.getItem('playerToken');
@@ -35,8 +41,19 @@ const GamePlayPage: React.FC = () => {
       `http://localhost:8080/api/v1/events/sessions/code/${roomCode}/subscribe?playerToken=${encodeURIComponent(playerToken)}`
     );
 
+    source.addEventListener('ROUND_TIME_UP', async () => {
+      try {
+        const res = await sessionApi.getLeaderboard(Number(sessionId));
+        setLeaderboard(res.data);
+        setShowLeaderboard(true);
+      } catch (e) {
+        console.error("Failed to fetch leaderboard");
+      }
+    });
+
     source.addEventListener('NEXT_QUESTION', (event) => {
       const data: LiveQuestionResponseDto = JSON.parse(event.data);
+      setShowLeaderboard(false);
       setQuestion(data);
       setSelectedIndex(null);
       setAnswered(false);
@@ -124,7 +141,8 @@ const GamePlayPage: React.FC = () => {
   
       {!question && <p>Waiting for question...</p>}
   
-      {question && (
+      {showLeaderboard ? (<LeaderboardPage leaderboard={leaderboard} />) 
+      : question && (
         <>
           <h3>{question.questionText}</h3>
           <ul className="options-list">
