@@ -2,6 +2,8 @@ package com.acticwolf.quizzy.services;
 
 import com.acticwolf.quizzy.dtos.*;
 
+import java.util.List;
+
 public interface GameSessionService {
 
     CreateGameSessionResponseDto createSession(CreateGameSessionRequestDto requestDto);
@@ -13,5 +15,7 @@ public interface GameSessionService {
     LiveQuestionResponseDto sendNextQuestion(Integer sessionId);
 
     SubmitAnswerResponseDto submitAnswer(Integer sessionId, Integer questionId, SubmitAnswerRequestDto requestDto);
+
+    List<LeaderboardEntryDto> getLeaderboard(Integer sessionId);
 
 }

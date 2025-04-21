@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/sessions")
 @RequiredArgsConstructor
@@ -48,6 +50,11 @@ public class GameSessionController {
             @RequestBody SubmitAnswerRequestDto requestDto) {
         SubmitAnswerResponseDto response = gameSessionService.submitAnswer(id, questionId, requestDto);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/leaderboard")
+    public List<LeaderboardEntryDto> getLeaderboard(@PathVariable Integer id) {
+        return gameSessionService.getLeaderboard(id);
     }
 
 }

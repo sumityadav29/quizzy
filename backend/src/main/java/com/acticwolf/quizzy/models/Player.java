@@ -30,6 +30,8 @@ public class Player {
     @Column(length = 36, unique = true)
     private String playerToken;
 
+    private int score = 0;
+
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GameSessionAnswer> answers = new ArrayList<>();
 }

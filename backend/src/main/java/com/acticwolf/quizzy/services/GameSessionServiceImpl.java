@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -191,16 +192,30 @@ public class GameSessionServiceImpl implements GameSessionService {
 
         int baseScore = 10;
         int penaltyPer500ms = (int) Math.floor(elapsedTime / 500.0);
-        int calculatedScore = isCorrect ? Math.max(0, baseScore - penaltyPer500ms) : 0;
+        int scoreForCurrentQuestion = isCorrect ? Math.max(0, baseScore - penaltyPer500ms) : 0;
 
-        answer.setScore(calculatedScore);
+        answer.setScore(scoreForCurrentQuestion);
 
         gameSessionAnswerRepository.save(answer);
+
+        player.setScore(player.getScore() + scoreForCurrentQuestion);
+        playerRepository.save(player);
 
         return SubmitAnswerResponseDto.builder()
                 .correct(isCorrect)
                 .responseTime(answer.getResponseTime())
                 .build();
+    }
+
+    @Override
+    public List<LeaderboardEntryDto> getLeaderboard(Integer sessionId) {
+        GameSession session = gameSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("Game session not found"));
+
+        return session.getPlayers().stream()
+                .map(player -> new LeaderboardEntryDto(player.getNickname(), player.getScore()))
+                .sorted(Comparator.comparingInt(LeaderboardEntryDto::getScore).reversed())
+                .collect(Collectors.toList());
     }
 
     private String generateRoomCode() {
