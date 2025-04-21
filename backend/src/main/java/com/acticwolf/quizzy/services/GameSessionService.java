@@ -1,9 +1,6 @@
 package com.acticwolf.quizzy.services;
 
-import com.acticwolf.quizzy.dtos.CreateGameSessionRequestDto;
-import com.acticwolf.quizzy.dtos.CreateGameSessionResponseDto;
-import com.acticwolf.quizzy.dtos.JoinGameSessionResponseDto;
-import com.acticwolf.quizzy.dtos.LiveQuestionResponseDto;
+import com.acticwolf.quizzy.dtos.*;
 
 public interface GameSessionService {
 
@@ -14,5 +11,7 @@ public interface GameSessionService {
     void startSession(Integer sessionId);
 
     LiveQuestionResponseDto sendNextQuestion(Integer sessionId);
+
+    SubmitAnswerResponseDto submitAnswer(Integer sessionId, Integer questionId, SubmitAnswerRequestDto requestDto);
 
 }

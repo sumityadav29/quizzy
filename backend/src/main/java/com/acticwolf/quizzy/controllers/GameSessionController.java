@@ -41,4 +41,13 @@ public class GameSessionController {
         return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/questions/{questionId}/answer")
+    public ResponseEntity<SubmitAnswerResponseDto> submitAnswer(
+            @PathVariable Integer id,
+            @PathVariable Integer questionId,
+            @RequestBody SubmitAnswerRequestDto requestDto) {
+        SubmitAnswerResponseDto response = gameSessionService.submitAnswer(id, questionId, requestDto);
+        return ResponseEntity.ok(response);
+    }
+
 }

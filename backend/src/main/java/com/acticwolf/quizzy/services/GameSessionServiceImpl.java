@@ -1,17 +1,8 @@
 package com.acticwolf.quizzy.services;
 
-import com.acticwolf.quizzy.dtos.CreateGameSessionRequestDto;
-import com.acticwolf.quizzy.dtos.CreateGameSessionResponseDto;
-import com.acticwolf.quizzy.dtos.JoinGameSessionResponseDto;
-import com.acticwolf.quizzy.dtos.LiveQuestionResponseDto;
-import com.acticwolf.quizzy.models.GameSession;
-import com.acticwolf.quizzy.models.Player;
-import com.acticwolf.quizzy.models.Question;
-import com.acticwolf.quizzy.models.Quiz;
-import com.acticwolf.quizzy.repositories.GameSessionRepository;
-import com.acticwolf.quizzy.repositories.PlayerRepository;
-import com.acticwolf.quizzy.repositories.QuestionRepository;
-import com.acticwolf.quizzy.repositories.QuizRepository;
+import com.acticwolf.quizzy.dtos.*;
+import com.acticwolf.quizzy.models.*;
+import com.acticwolf.quizzy.repositories.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +23,7 @@ public class GameSessionServiceImpl implements GameSessionService {
     private final PlayerRepository playerRepository;
     private final QuestionRepository questionRepository;
     private final GameSessionRepository gameSessionRepository;
+    private final GameSessionAnswerRepository gameSessionAnswerRepository;
 
     @Override
     public CreateGameSessionResponseDto createSession(CreateGameSessionRequestDto requestDto) {
@@ -149,6 +141,57 @@ public class GameSessionServiceImpl implements GameSessionService {
             }
         }
         return -1;
+    }
+
+    @Override
+    public SubmitAnswerResponseDto submitAnswer(Integer sessionId, Integer questionId, SubmitAnswerRequestDto requestDto) {
+        GameSession session = gameSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
+
+        if (session.getStatus() != GameSession.SessionStatus.IN_PROGRESS) {
+            throw new RuntimeException("Session is not active.");
+        }
+
+        Question currentQuestion = session.getCurrentQuestion();
+        if (currentQuestion == null) {
+            throw new RuntimeException("No current question.");
+        }
+
+        if (!questionId.equals(currentQuestion.getId())) {
+            throw new RuntimeException("This is not the live question in game.");
+        }
+
+        Player player = playerRepository.findByPlayerToken(requestDto.getPlayerToken())
+                .orElseThrow(() -> new RuntimeException("Invalid player token"));
+
+        if (!player.getSession().getId().equals(sessionId)) {
+            throw new RuntimeException("Player is not part of this session.");
+        }
+
+        Optional<GameSessionAnswer> existing = gameSessionAnswerRepository
+                .findByPlayerIdAndQuestionId(player.getId(), currentQuestion.getId());
+
+        if (existing.isPresent()) {
+            throw new RuntimeException("Answer already submitted.");
+        }
+
+        boolean isCorrect = requestDto.getSelectedIndex().equals(currentQuestion.getCorrectOption());
+
+        GameSessionAnswer answer = new GameSessionAnswer();
+        answer.setPlayer(player);
+        answer.setQuestion(currentQuestion);
+        answer.setSelectedIndex(requestDto.getSelectedIndex());
+        answer.setIsCorrect(isCorrect);
+        answer.setSubmittedAt(new Timestamp(System.currentTimeMillis()));
+        long elapsedTime = System.currentTimeMillis() - session.getStartedAt().getTime();
+        answer.setResponseTime((int) Math.min(elapsedTime, Integer.MAX_VALUE));
+
+        gameSessionAnswerRepository.save(answer);
+
+        return SubmitAnswerResponseDto.builder()
+                .correct(isCorrect)
+                .responseTime(answer.getResponseTime())
+                .build();
     }
 
     private String generateRoomCode() {
