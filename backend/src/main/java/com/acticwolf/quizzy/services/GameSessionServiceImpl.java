@@ -186,6 +186,12 @@ public class GameSessionServiceImpl implements GameSessionService {
         long elapsedTime = System.currentTimeMillis() - session.getStartedAt().getTime();
         answer.setResponseTime((int) Math.min(elapsedTime, Integer.MAX_VALUE));
 
+        int baseScore = 10;
+        int penaltyPer500ms = (int) Math.floor(elapsedTime / 500.0);
+        int calculatedScore = isCorrect ? Math.max(0, baseScore - penaltyPer500ms) : 0;
+
+        answer.setScore(calculatedScore);
+
         gameSessionAnswerRepository.save(answer);
 
         return SubmitAnswerResponseDto.builder()

@@ -33,4 +33,6 @@ public class GameSessionAnswer {
     private Boolean isCorrect;
 
     private Integer responseTime;
+
+    private Integer score = 0;
 }
