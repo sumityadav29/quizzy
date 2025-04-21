@@ -2,14 +2,13 @@ package com.acticwolf.quizzy.controllers;
 
 import com.acticwolf.quizzy.dtos.CreateGameSessionRequestDto;
 import com.acticwolf.quizzy.dtos.CreateGameSessionResponseDto;
+import com.acticwolf.quizzy.dtos.JoinGameSessionRequestDto;
+import com.acticwolf.quizzy.dtos.JoinGameSessionResponseDto;
 import com.acticwolf.quizzy.services.GameSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/sessions")
@@ -24,4 +23,13 @@ public class GameSessionController {
         CreateGameSessionResponseDto response = gameSessionService.createSession(requestDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @PostMapping("/code/{roomCode}/join")
+    public ResponseEntity<JoinGameSessionResponseDto> joinSessionByRoomCode(
+            @PathVariable String roomCode,
+            @RequestBody JoinGameSessionRequestDto requestDto) {
+        JoinGameSessionResponseDto response = gameSessionService.joinSessionByRoomCode(roomCode, requestDto.getNickname());
+        return ResponseEntity.ok(response);
+    }
+
 }
