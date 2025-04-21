@@ -1,6 +1,8 @@
 package com.acticwolf.quizzy.controllers;
 
+import com.acticwolf.quizzy.dtos.AddQuestionRequestDto;
 import com.acticwolf.quizzy.dtos.CreateQuizRequestDto;
+import com.acticwolf.quizzy.dtos.QuestionResponseDto;
 import com.acticwolf.quizzy.dtos.QuizDetailResponseDto;
 import com.acticwolf.quizzy.services.QuizService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class QuizController {
 
-    @Autowired
     private final QuizService quizService;
 
     @PostMapping
@@ -27,5 +28,13 @@ public class QuizController {
     public ResponseEntity<QuizDetailResponseDto> getQuiz(@PathVariable Integer id) {
         QuizDetailResponseDto response = quizService.getQuizDetailById(id);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{quizId}/questions")
+    public ResponseEntity<QuizDetailResponseDto> addQuestion(
+            @PathVariable Integer quizId,
+            @RequestBody AddQuestionRequestDto requestDto) {
+        QuizDetailResponseDto responseDto = quizService.addQuestionToQuiz(quizId, requestDto);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 }
