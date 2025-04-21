@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.sql.Timestamp;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GameSessionServiceImpl implements GameSessionService {
 
+    private final SseService sseService;
     private final QuizRepository quizRepository;
     private final PlayerRepository playerRepository;
     private final GameSessionRepository gameSessionRepository;
@@ -72,6 +74,23 @@ public class GameSessionServiceImpl implements GameSessionService {
                 .playerToken(player.getPlayerToken())
                 .nickname(player.getNickname())
                 .build();
+    }
+
+    @Override
+    public void startSession(Integer sessionId) {
+        GameSession session = gameSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
+
+        if (session.getStatus() != GameSession.SessionStatus.WAITING) {
+            throw new IllegalStateException("Only sessions in WAITING state can be started");
+        }
+
+        session.setStatus(GameSession.SessionStatus.IN_PROGRESS);
+        session.setStartedAt(new Timestamp(System.currentTimeMillis()));
+        session.setCurrentQuestion(null);
+        gameSessionRepository.save(session);
+
+        sseService.sendToSession(sessionId, "QUIZ_STARTED", Map.of());
     }
 
     private String generateRoomCode() {

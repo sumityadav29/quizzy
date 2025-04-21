@@ -32,4 +32,10 @@ public class GameSessionController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/{id}/start")
+    public ResponseEntity<Void> startSession(@PathVariable Integer id) {
+        gameSessionService.startSession(id);
+        return ResponseEntity.ok().build();
+    }
+
 }

@@ -10,4 +10,6 @@ public interface GameSessionService {
 
     JoinGameSessionResponseDto joinSessionByRoomCode(String roomCode, String nickname);
 
+    void startSession(Integer sessionId);
+
 }
