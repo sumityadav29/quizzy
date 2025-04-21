@@ -6,6 +6,7 @@ import {
   CreateGameSessionRequestDto,
   PaginatedQuizResponseDto,
 } from '../api/quizzy';
+import './StartNewGamePage.css';
 
 const StartNewGamePage: React.FC = () => {
   const [paginatedQuizzes, setPaginatedQuizzes] = useState<PaginatedQuizResponseDto>({});
@@ -37,8 +38,6 @@ const StartNewGamePage: React.FC = () => {
       localStorage.setItem('roomCode', res.data.roomCode || '');
       localStorage.setItem('sessionId', String(res.data.id));
 
-      localStorage.setItem('isHost', 'true');
-
       navigate('/game');
     } catch (err) {
       setError('Failed to create game session.');
@@ -46,9 +45,9 @@ const StartNewGamePage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="start-game-container">
       <h2>Start a New Game</h2>
-      <form onSubmit={handleCreate}>
+      <form className="start-game-form" onSubmit={handleCreate}>
         <select
           value={selectedQuizId ?? ''}
           onChange={(e) => setSelectedQuizId(Number(e.target.value))}
@@ -63,7 +62,7 @@ const StartNewGamePage: React.FC = () => {
         </select>
         <button type="submit">Start Game</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="start-game-error">{error}</p>}
     </div>
   );
 };

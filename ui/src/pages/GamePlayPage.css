@@ -1,0 +1,85 @@
+.gameplay-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+    text-align: center;
+  }
+  
+  .gameplay-container h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .gameplay-container h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .options-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .option-button {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .option-button:hover:not(:disabled) {
+    background-color: #eee;
+  }
+  
+  .option-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  .option-button.correct {
+    background-color: #c8f7c5;
+    border-color: #a3e8a1;
+  }
+  
+  .option-button.incorrect {
+    background-color: #f8d0d0;
+    border-color: #e8aaaa;
+  }
+  
+  .result-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 1rem;
+  }
+  
+  .host-controls {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .host-controls button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    border: none;
+    background-color: #222;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .host-controls button:hover {
+    background-color: #444;
+  }

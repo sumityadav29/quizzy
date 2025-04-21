@@ -1,0 +1,54 @@
+.start-game-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+    text-align: center;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+  }
+  
+  .start-game-container h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .start-game-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .start-game-form select {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    cursor: pointer;
+  }
+  
+  .start-game-form select:focus {
+    outline: none;
+    border-color: #888;
+  }
+  
+  .start-game-form button {
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #222;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .start-game-form button:hover {
+    background-color: #444;
+  }
+  
+  .start-game-error {
+    color: red;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }

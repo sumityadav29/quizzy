@@ -6,6 +6,8 @@ import {
   SubmitAnswerResponseDto,
 } from '../api/quizzy';
 
+import './GamePlayPage.css';
+
 const GamePlayPage: React.FC = () => {
   const [question, setQuestion] = useState<LiveQuestionResponseDto | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -99,56 +101,52 @@ const GamePlayPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="gameplay-container">
       <h2>Quiz Game</h2>
-
+  
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
+  
       {!question && <p>Waiting for question...</p>}
-
+  
       {question && (
-        <div>
+        <>
           <h3>{question.questionText}</h3>
-          <ul>
+          <ul className="options-list">
             {question.options?.map((opt, i) => (
               <li key={i}>
                 <button
+                  className={`option-button ${
+                    selectedIndex === i && response
+                      ? response.correct
+                        ? 'correct'
+                        : 'incorrect'
+                      : ''
+                  }`}
                   disabled={answered}
                   onClick={() => handleAnswer(i)}
-                  style={{
-                    background:
-                      selectedIndex === i
-                        ? response?.correct
-                          ? 'lightgreen'
-                          : 'salmon'
-                        : undefined,
-                  }}
                 >
                   {opt}
                 </button>
               </li>
             ))}
           </ul>
-
+  
           {answered && response && (
-            <p>
-              {response.correct ? '✅ Correct!' : '❌ Incorrect.'} Response time:{' '}
-              {response.responseTime}ms
+            <p className="result-text">
+              {response.correct ? '✅ Correct!' : '❌ Incorrect.'} Response time: {response.responseTime}ms
             </p>
           )}
-
+  
           {isHost && (
-            <div style={{ marginTop: '1rem' }}>
+            <div className="host-controls">
               {!question && (
                 <button onClick={handleStartQuiz}>Start Quiz</button>
               )}
-              {question && (
-                <button onClick={handleNextQuestion}>Next Question</button>
-              )}
+              <button onClick={handleNextQuestion}>Next Question</button>
               <button onClick={handleEndQuiz}>End Quiz</button>
             </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );

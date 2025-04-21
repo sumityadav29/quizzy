@@ -6,6 +6,8 @@ import {
   QuizDetailResponseDto,
 } from '../api/quizzy';
 
+import './CreateQuizPage.css';
+
 const CreateQuizPage: React.FC = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -42,9 +44,9 @@ const CreateQuizPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="create-quiz-container">
       <h2>Create a New Quiz</h2>
-      <form onSubmit={handleCreate}>
+      <form className="create-quiz-form" onSubmit={handleCreate}>
         <div>
           <label>Title:</label>
           <input
@@ -54,7 +56,7 @@ const CreateQuizPage: React.FC = () => {
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-
+  
         <div>
           <label>Description:</label>
           <textarea
@@ -63,7 +65,7 @@ const CreateQuizPage: React.FC = () => {
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
-
+  
         <div>
           <label>Created By:</label>
           <input
@@ -73,13 +75,13 @@ const CreateQuizPage: React.FC = () => {
             placeholder="admin"
           />
         </div>
-
+  
         <button type="submit">Create Quiz</button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="quiz-error">{error}</p>}
       </form>
-
+  
       {createdQuiz && (
-        <div>
+        <div className="quiz-success">
           <p>✅ Quiz “{createdQuiz.title}” created successfully.</p>
           <button onClick={handleAddQuestions}>➕ Add Questions</button>
         </div>

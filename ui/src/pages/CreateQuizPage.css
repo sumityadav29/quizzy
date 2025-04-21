@@ -1,0 +1,80 @@
+.create-quiz-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+  }
+  
+  .create-quiz-container h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .create-quiz-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  
+  .create-quiz-form label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+  
+  .create-quiz-form input,
+  .create-quiz-form textarea {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+  }
+  
+  .create-quiz-form textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .create-quiz-form button {
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .create-quiz-form button:hover {
+    background-color: #444;
+  }
+  
+  .quiz-success {
+    margin-top: 2rem;
+    text-align: center;
+  }
+  
+  .quiz-success button {
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    background-color: #00704a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .quiz-success button:hover {
+    background-color: #015b3d;
+  }
+  
+  .quiz-error {
+    color: red;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }

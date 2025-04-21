@@ -1,0 +1,76 @@
+.add-question-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+  }
+  
+  .add-question-container h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .add-question-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .add-question-form textarea,
+  .add-question-form input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .option-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .option-row input[type="radio"] {
+    transform: scale(1.2);
+  }
+  
+  .add-question-form button {
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .add-question-form button:hover {
+    background-color: #444;
+  }
+  
+  .question-error {
+    color: red;
+    font-size: 0.9rem;
+  }
+  
+  .submitted-questions {
+    margin-top: 2rem;
+  }
+  
+  .submitted-questions h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .submitted-questions ul {
+    padding-left: 1rem;
+  }
+  
+  .submitted-questions li {
+    margin-bottom: 0.75rem;
+  }

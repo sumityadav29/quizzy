@@ -7,6 +7,8 @@ import {
   QuestionResponseDto,
 } from '../api/quizzy';
 
+import './AddQuestionsPage.css';
+
 const AddQuestionsPage: React.FC = () => {
   const { id: quizIdParam } = useParams();
   const quizId = Number(quizIdParam);
@@ -59,10 +61,10 @@ const AddQuestionsPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="add-question-container">
       <h2>Add Questions to Quiz: {quiz?.title}</h2>
-
-      <form onSubmit={handleSubmit}>
+  
+      <form className="add-question-form" onSubmit={handleSubmit}>
         <div>
           <label>Question Text:</label>
           <textarea
@@ -71,11 +73,11 @@ const AddQuestionsPage: React.FC = () => {
             onChange={(e) => setQuestionText(e.target.value)}
           />
         </div>
-
+  
         <div>
           <label>Options:</label>
           {options.map((opt, i) => (
-            <div key={i}>
+            <div key={i} className="option-row">
               <input
                 type="text"
                 value={opt}
@@ -88,26 +90,27 @@ const AddQuestionsPage: React.FC = () => {
                   name="correct"
                   checked={correctIndex === i}
                   onChange={() => setCorrectIndex(i)}
-                />
-                Correct
+                />{' '}
               </label>
             </div>
           ))}
         </div>
-
+  
         <button type="submit">Add Question</button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="question-error">{error}</p>}
       </form>
-
-      {/* <hr />
-      <h3>Submitted Questions</h3>
-      <ul>
-        {submittedQuestions.map((q, index) => (
-          <li key={index}>
-            <strong>{q.questionText}</strong> (Correct: {q.options?.[q.correctOption || 0]})
-          </li>
-        ))}
-      </ul> */}
+  
+      {/* Optional submitted questions display */}
+      {/* <div className="submitted-questions">
+        <h3>Submitted Questions</h3>
+        <ul>
+          {submittedQuestions.map((q, index) => (
+            <li key={index}>
+              <strong>{q.questionText}</strong> (Correct: {q.options?.[q.correctOption || 0]})
+            </li>
+          ))}
+        </ul>
+      </div> */}
     </div>
   );
 };

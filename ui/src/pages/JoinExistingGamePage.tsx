@@ -5,6 +5,7 @@ import {
   JoinGameSessionRequestDto,
   JoinGameSessionResponseDto,
 } from '../api/quizzy';
+import './JoinExistingGamePage.css';
 
 const JoinExistingGamePage: React.FC = () => {
   const [nickname, setNickname] = useState('');
@@ -20,28 +21,23 @@ const JoinExistingGamePage: React.FC = () => {
     try {
       const requestBody: JoinGameSessionRequestDto = { nickname: nickname.trim() };
       const res = await api.joinSessionByRoomCode(roomCode.trim().toUpperCase(), requestBody);
-
       const data: JoinGameSessionResponseDto = res.data;
 
       localStorage.setItem('playerToken', data.playerToken || '');
       localStorage.setItem('playerId', String(data.playerId));
       localStorage.setItem('nickname', data.nickname || '');
       localStorage.setItem('roomCode', roomCode.toUpperCase());
-      
-    //   if (data.sessionId) {
-    //     localStorage.setItem('sessionId', String(data.sessionId));
-    //   }
 
-    navigate('/game');
+      navigate('/game');
     } catch (err) {
       setError('Failed to join game. Please check the room code.');
     }
   };
 
   return (
-    <div>
+    <div className="join-container">
       <h2>Join Existing Game</h2>
-      <form onSubmit={handleJoin}>
+      <form className="join-form" onSubmit={handleJoin}>
         <input
           type="text"
           placeholder="Nickname"
@@ -58,7 +54,7 @@ const JoinExistingGamePage: React.FC = () => {
         />
         <button type="submit">Join Game</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="join-error">{error}</p>}
     </div>
   );
 };
