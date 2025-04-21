@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QuizServiceImpl implements QuizService {
 
+    private final ObjectMapper objectMapper;
     private final QuizRepository quizRepository;
     private final QuestionRepository questionRepository;
-    private final ObjectMapper objectMapper;
 
     @Override
     public QuizDetailResponseDto createQuiz(CreateQuizRequestDto request) {
@@ -112,7 +112,7 @@ public class QuizServiceImpl implements QuizService {
                 .build();
     }
 
-    private List<String> parseJsonArray(String jsonArray) {
+    public List<String> parseJsonArray(String jsonArray) {
         try {
             return objectMapper.readValue(jsonArray, new TypeReference<List<String>>() {});
         } catch (JsonProcessingException e) {

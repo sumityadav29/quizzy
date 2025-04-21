@@ -1,9 +1,6 @@
 package com.acticwolf.quizzy.controllers;
 
-import com.acticwolf.quizzy.dtos.CreateGameSessionRequestDto;
-import com.acticwolf.quizzy.dtos.CreateGameSessionResponseDto;
-import com.acticwolf.quizzy.dtos.JoinGameSessionRequestDto;
-import com.acticwolf.quizzy.dtos.JoinGameSessionResponseDto;
+import com.acticwolf.quizzy.dtos.*;
 import com.acticwolf.quizzy.services.GameSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,6 +33,12 @@ public class GameSessionController {
     public ResponseEntity<Void> startSession(@PathVariable Integer id) {
         gameSessionService.startSession(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/questions/next")
+    public ResponseEntity<LiveQuestionResponseDto> sendNextQuestion(@PathVariable Integer id) {
+        LiveQuestionResponseDto dto = gameSessionService.sendNextQuestion(id);
+        return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.noContent().build();
     }
 
 }
