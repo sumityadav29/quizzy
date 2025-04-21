@@ -40,7 +40,7 @@ const StartNewGamePage: React.FC = () => {
       };
       const res = await sessionApi.createSession(req);
 
-      localStorage.setItem('isHost', 'true');
+    //   localStorage.setItem('isHost', 'true');
       localStorage.setItem('roomCode', res.data.roomCode || '');
       localStorage.setItem('sessionId', String(res.data.id));
 

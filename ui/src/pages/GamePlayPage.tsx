@@ -21,7 +21,7 @@ const GamePlayPage: React.FC = () => {
   const playerToken = localStorage.getItem('playerToken');
   const roomCode = localStorage.getItem('roomCode');
 
-  const isHost = localStorage.getItem('isHost') === 'true';
+  // const isHost = localStorage.getItem('isHost') === 'true';
 
   const sessionApi = new GameSessionControllerApi();
 
@@ -157,7 +157,7 @@ const GamePlayPage: React.FC = () => {
             <p>Time Remaining: {timeRemaining} seconds</p>
           </div>
   
-          {isHost && (
+          {/* {isHost && (
             <div className="host-controls">
               {!question && (
                 <button onClick={handleStartQuiz}>Start Quiz</button>
@@ -165,7 +165,7 @@ const GamePlayPage: React.FC = () => {
               <button onClick={handleNextQuestion}>Next Question</button>
               <button onClick={handleEndQuiz}>End Quiz</button>
             </div>
-          )}
+          )} */}
         </>
       )}
     </div>
