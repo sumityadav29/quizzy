@@ -14,6 +14,8 @@ const GamePlayPage: React.FC = () => {
   const [answered, setAnswered] = useState(false);
   const [response, setResponse] = useState<SubmitAnswerResponseDto | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [timeRemaining, setTimeRemaining] = useState<number>(0);
+  const [canSubmit, setCanSubmit] = useState<boolean>(true);
 
   const sessionId = localStorage.getItem('sessionId');
   const playerToken = localStorage.getItem('playerToken');
@@ -39,6 +41,20 @@ const GamePlayPage: React.FC = () => {
       setSelectedIndex(null);
       setAnswered(false);
       setResponse(null);
+
+      setTimeRemaining(data.maximumAllowedTime || 15);
+      setCanSubmit(true);
+
+      const timer = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setCanSubmit(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     });
 
     source.addEventListener('QUIZ_ENDED', () => {
@@ -52,7 +68,7 @@ const GamePlayPage: React.FC = () => {
   }, [roomCode, playerToken, sessionId]);
 
   const handleAnswer = async (index: number) => {
-    if (answered || selectedIndex !== null || !sessionId || !playerToken || !question?.id) return;
+    if (answered || selectedIndex !== null || !sessionId || !playerToken || !question?.id || !canSubmit) return;
 
     setSelectedIndex(index);
     setAnswered(true);
@@ -122,7 +138,7 @@ const GamePlayPage: React.FC = () => {
                         : 'incorrect'
                       : ''
                   }`}
-                  disabled={answered}
+                  disabled={answered || !canSubmit}
                   onClick={() => handleAnswer(i)}
                 >
                   {opt}
@@ -136,6 +152,10 @@ const GamePlayPage: React.FC = () => {
               {response.correct ? '✅ Correct!' : '❌ Incorrect.'} Response time: {response.responseTime}ms
             </p>
           )}
+
+          <div className="timer">
+            <p>Time Remaining: {timeRemaining} seconds</p>
+          </div>
   
           {isHost && (
             <div className="host-controls">
