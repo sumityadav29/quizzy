@@ -34,8 +34,14 @@ public class GameSession {
 
     private Timestamp endedAt;
 
+    private Timestamp createdAt;
+
     @Column(unique = true, length = 6)
     private String roomCode;
+
+    @OneToOne
+    @JoinColumn(name = "winner")
+    private Player winner;
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Player> players = new ArrayList<>();
