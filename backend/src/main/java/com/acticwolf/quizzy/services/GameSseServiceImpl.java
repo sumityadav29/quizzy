@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class SseServiceImpl implements SseService {
+public class GameSseServiceImpl implements GameSseService {
 
     private final Map<Integer, Map<Integer, SseEmitter>> sessionEmitters = new ConcurrentHashMap<>();
 
@@ -27,12 +27,12 @@ public class SseServiceImpl implements SseService {
     }
 
     @Override
-    public void sendToSession(Integer sessionId, String eventKey, Object data) {
+    public void sendToSession(Integer sessionId, GameSessionRealTimeServiceImpl.GameEvent eventKey, Object data) {
         Map<Integer, SseEmitter> emitters = sessionEmitters.getOrDefault(sessionId, Map.of());
 
         for (SseEmitter emitter : emitters.values()) {
             try {
-                emitter.send(SseEmitter.event().name(eventKey).data(data));
+                emitter.send(SseEmitter.event().name(eventKey.name()).data(data));
             } catch (IOException e) {
                 emitter.completeWithError(e);
             }
@@ -40,13 +40,13 @@ public class SseServiceImpl implements SseService {
     }
 
     @Override
-    public void sendToPlayer(Integer sessionId, Integer playerId, String eventKey, Object data) {
+    public void sendToPlayer(Integer sessionId, Integer playerId, GameSessionRealTimeServiceImpl.GameEvent eventKey, Object data) {
         Map<Integer, SseEmitter> emitters = sessionEmitters.getOrDefault(sessionId, Map.of());
         SseEmitter emitter = emitters.get(playerId);
 
         if (emitter != null) {
             try {
-                emitter.send(SseEmitter.event().name(eventKey).data(data));
+                emitter.send(SseEmitter.event().name(eventKey.name()).data(data));
             } catch (IOException e) {
                 emitter.completeWithError(e);
             }

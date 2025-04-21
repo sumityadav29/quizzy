@@ -12,10 +12,6 @@ public interface GameSessionService {
 
     void startSession(Integer sessionId);
 
-    LiveQuestionResponseDto sendNextQuestion(Integer sessionId);
-
     SubmitAnswerResponseDto submitAnswer(Integer sessionId, Integer questionId, SubmitAnswerRequestDto requestDto);
-
-    List<LeaderboardEntryDto> getLeaderboard(Integer sessionId);
 
 }

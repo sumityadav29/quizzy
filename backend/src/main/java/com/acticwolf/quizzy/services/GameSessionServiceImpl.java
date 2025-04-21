@@ -3,8 +3,6 @@ package com.acticwolf.quizzy.services;
 import com.acticwolf.quizzy.dtos.*;
 import com.acticwolf.quizzy.models.*;
 import com.acticwolf.quizzy.repositories.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,13 +16,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GameSessionServiceImpl implements GameSessionService {
 
-    private final SseService sseService;
-    private final ObjectMapper objectMapper;
     private final QuizRepository quizRepository;
     private final PlayerRepository playerRepository;
-    private final QuestionRepository questionRepository;
     private final GameSessionRepository gameSessionRepository;
     private final GameSessionAnswerRepository gameSessionAnswerRepository;
+    private final GameSessionExecutorServiceImpl gameSessionExecutorService;
 
     @Override
     public CreateGameSessionResponseDto createSession(CreateGameSessionRequestDto requestDto) {
@@ -85,66 +81,7 @@ public class GameSessionServiceImpl implements GameSessionService {
             throw new IllegalStateException("Only sessions in WAITING state can be started");
         }
 
-        session.setStatus(GameSession.SessionStatus.IN_PROGRESS);
-        session.setStartedAt(new Timestamp(System.currentTimeMillis()));
-        session.setCurrentQuestion(null);
-        gameSessionRepository.save(session);
-
-        sseService.sendToSession(sessionId, "QUIZ_STARTED", Map.of());
-    }
-
-    @Override
-    public LiveQuestionResponseDto sendNextQuestion(Integer sessionId) {
-        GameSession session = gameSessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
-
-        if (session.getStatus() != GameSession.SessionStatus.IN_PROGRESS) {
-            throw new IllegalStateException("Session is not in progress.");
-        }
-
-        List<Question> questions = questionRepository.findByQuizId(session.getQuiz().getId());
-        questions.sort(Comparator.comparingInt(Question::getId));
-
-        int nextIndex = 0;
-
-        if (session.getCurrentQuestion() != null) {
-            int currentIndex = findQuestionIndex(questions, session.getCurrentQuestion().getId());
-            nextIndex = currentIndex + 1;
-        }
-
-        if (nextIndex >= questions.size()) {
-            session.setStatus(GameSession.SessionStatus.FINISHED);
-            session.setEndedAt(new Timestamp(System.currentTimeMillis()));
-            session.setCurrentQuestion(null);
-            gameSessionRepository.save(session);
-
-            sseService.sendToSession(sessionId, "QUIZ_ENDED", Map.of());
-            return null;
-        }
-
-        Question nextQuestion = questions.get(nextIndex);
-        session.setCurrentQuestion(nextQuestion);
-        gameSessionRepository.save(session);
-
-        LiveQuestionResponseDto dto = LiveQuestionResponseDto.builder()
-                .id(nextQuestion.getId())
-                .questionText(nextQuestion.getQuestionText())
-                .options(parseJsonArray(nextQuestion.getOptionsJson()))
-                .maximumAllowedTime(session.getRoundTime())
-                .build();
-
-        sseService.sendToSession(sessionId, "NEXT_QUESTION", dto);
-
-        return dto;
-    }
-
-    private int findQuestionIndex(List<Question> questions, int currentId) {
-        for (int i = 0; i < questions.size(); i++) {
-            if (questions.get(i).getId().equals(currentId)) {
-                return i;
-            }
-        }
-        return -1;
+        new Thread(() -> gameSessionExecutorService.runQuizSession(session)).start();
     }
 
     @Override
@@ -207,17 +144,6 @@ public class GameSessionServiceImpl implements GameSessionService {
                 .build();
     }
 
-    @Override
-    public List<LeaderboardEntryDto> getLeaderboard(Integer sessionId) {
-        GameSession session = gameSessionRepository.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("Game session not found"));
-
-        return session.getPlayers().stream()
-                .map(player -> new LeaderboardEntryDto(player.getNickname(), player.getScore()))
-                .sorted(Comparator.comparingInt(LeaderboardEntryDto::getScore).reversed())
-                .collect(Collectors.toList());
-    }
-
     private String generateRoomCode() {
         int length = 6;
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -227,14 +153,6 @@ public class GameSessionServiceImpl implements GameSessionService {
             sb.append(chars.charAt(random.nextInt(chars.length())));
         }
         return sb.toString();
-    }
-
-    public List<String> parseJsonArray(String jsonArray) {
-        try {
-            return objectMapper.readValue(jsonArray, new TypeReference<List<String>>() {});
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to parse options JSON", e);
-        }
     }
 
 }

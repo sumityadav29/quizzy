@@ -4,7 +4,7 @@ import com.acticwolf.quizzy.models.GameSession;
 import com.acticwolf.quizzy.models.Player;
 import com.acticwolf.quizzy.repositories.GameSessionRepository;
 import com.acticwolf.quizzy.repositories.PlayerRepository;
-import com.acticwolf.quizzy.services.SseService;
+import com.acticwolf.quizzy.services.GameSseService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class SseController {
 
     private final PlayerRepository playerRepository;
     private final GameSessionRepository gameSessionRepository;
-    private final SseService sseService;
+    private final GameSseService gameSseService;
 
     @GetMapping("/sessions/code/{roomCode}/subscribe")
     public SseEmitter subscribeToEvents(
@@ -37,6 +37,6 @@ public class SseController {
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         response.setHeader("Cache-Control", "no-store");
 
-        return sseService.createEmitter(session.getId(), player.getId());
+        return gameSseService.createEmitter(session.getId(), player.getId());
     }
 }
