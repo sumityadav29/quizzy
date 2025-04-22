@@ -1,0 +1,21 @@
+  .final-leaderboard-wrapper {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    text-align: center;
+  }
+  
+  .final-leaderboard-wrapper h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .final-leaderboard-wrapper .error-message {
+    color: red;
+    font-weight: 500;
+    margin-top: 1rem;
+  }

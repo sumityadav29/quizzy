@@ -1,5 +1,5 @@
 import React from 'react';
-import './LeaderboardPage.css';
+import './LeaderboardComponent.css';
 import { LeaderboardEntryDto } from '../api/quizzy';
 
 
@@ -7,7 +7,7 @@ interface LeaderboardPageProps {
   leaderboard: LeaderboardEntryDto[];
 }
 
-const LeaderboardPage: React.FC<LeaderboardPageProps> = ({ leaderboard }) => {
+const LeaderboardComponent: React.FC<LeaderboardPageProps> = ({ leaderboard }) => {
   return (
     <div className="leaderboard-container">
       <h2>🏆 Leaderboard</h2>
@@ -25,4 +25,4 @@ const LeaderboardPage: React.FC<LeaderboardPageProps> = ({ leaderboard }) => {
   );
 };
 
-export default LeaderboardPage;
+export default LeaderboardComponent;

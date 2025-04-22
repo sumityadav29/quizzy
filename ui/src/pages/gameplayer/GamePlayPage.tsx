@@ -7,7 +7,7 @@ import {
   SubmitAnswerResponseDto,
 } from '../../api/quizzy';
 
-import LeaderboardPage from '../../components/LeaderboardPage';
+import LeaderboardComponent from '../../components/LeaderboardComponent';
 import { useSession } from '../../contexts/SessionContext';
 
 import './GamePlayPage.css';
@@ -152,7 +152,7 @@ const GamePlayPage: React.FC = () => {
   
       {!question && <p>Waiting for question...</p>}
   
-      {showLeaderboard ? (<LeaderboardPage leaderboard={leaderboard} />) 
+      {showLeaderboard ? (<LeaderboardComponent leaderboard={leaderboard} />) 
       : question && (
         <>
           <h3>{question.questionText}</h3>

@@ -8,6 +8,7 @@ import GamePlayPage from './pages/gameplayer/GamePlayPage';
 import CreateQuizPage from './pages/quizadmin/CreateQuizPage';
 import AddQuestionsPage from './pages/quizadmin/AddQuestionsPage';
 import { SessionProvider } from './contexts/SessionContext';
+import GameOverPage from './pages/gameplayer/GameOverPage';
 
 const App: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const App: React.FC = () => {
           <Route path="/game" element={<GamePlayPage />} />
           <Route path="/admin/quiz/new" element={<CreateQuizPage />} />
           <Route path="/admin/quiz/:id/questions" element={<AddQuestionsPage />} />
+          <Route path="/leaderboard/:sessionId" element={<GameOverPage />} />
         </Routes>
       </SessionProvider>
     </div>
