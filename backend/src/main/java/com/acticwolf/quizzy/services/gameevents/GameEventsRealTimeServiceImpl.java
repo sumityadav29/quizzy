@@ -35,8 +35,12 @@ public class GameEventsRealTimeServiceImpl implements GameEventsRealTimeService 
 
     @Override
     public LiveQuestionResponseDto sendNextQuestion(Integer sessionId) {
+        System.out.println("sendNextQuestion called for sessionId = " + sessionId);
+
         GameSession session = gameSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
+
+        System.out.println("Current session status: " + session.getStatus());
 
         if (session.getStatus() != GameSession.SessionStatus.IN_PROGRESS) {
             throw new IllegalStateException("Session is not in progress.");
@@ -45,14 +49,21 @@ public class GameEventsRealTimeServiceImpl implements GameEventsRealTimeService 
         List<Question> questions = questionRepository.findByQuizId(session.getQuiz().getId());
         questions.sort(Comparator.comparingInt(Question::getId));
 
+        System.out.println("Total questions in quiz: " + questions.size());
+
         int nextIndex = 0;
 
         if (session.getCurrentQuestion() != null) {
             int currentIndex = findQuestionIndex(questions, session.getCurrentQuestion().getId());
+            System.out.println("Current question ID: " + session.getCurrentQuestion().getId() + ", index: " + currentIndex);
             nextIndex = currentIndex + 1;
+        } else {
+            System.out.println("No current question set yet. Starting from index 0.");
         }
 
         if (nextIndex >= questions.size()) {
+            System.out.println("All questions exhausted. Marking quiz as FINISHED.");
+
             session.setStatus(GameSession.SessionStatus.FINISHED);
             session.setEndedAt(new Timestamp(System.currentTimeMillis()));
             session.setCurrentQuestion(null);
@@ -63,6 +74,8 @@ public class GameEventsRealTimeServiceImpl implements GameEventsRealTimeService 
         }
 
         Question nextQuestion = questions.get(nextIndex);
+        System.out.println("Sending next question (ID: " + nextQuestion.getId() + ", index: " + nextIndex + ")");
+
         session.setCurrentQuestion(nextQuestion);
         gameSessionRepository.save(session);
 
@@ -72,6 +85,8 @@ public class GameEventsRealTimeServiceImpl implements GameEventsRealTimeService 
                 .options(parseJsonArray(nextQuestion.getOptionsJson()))
                 .maximumAllowedTime(session.getRoundTime())
                 .build();
+
+        System.out.println("generated question dto : " + dto);
 
         gameSseService.sendToSession(sessionId, GameEvent.NEXT_QUESTION, dto);
 

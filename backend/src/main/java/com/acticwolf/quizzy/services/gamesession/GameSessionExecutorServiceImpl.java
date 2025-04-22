@@ -11,7 +11,6 @@ import com.acticwolf.quizzy.services.gameevents.GameSseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -32,7 +31,6 @@ public class GameSessionExecutorServiceImpl implements GameSessionExecutorServic
 
         session.setStatus(GameSession.SessionStatus.IN_PROGRESS);
         session.setStartedAt(new Timestamp(System.currentTimeMillis()));
-        session.setCurrentQuestion(null);
         gameSessionRepository.save(session);
         gameSseService.sendToSession(session.getId(), GameEventsRealTimeServiceImpl.GameEvent.QUIZ_STARTED, Map.of());
 
@@ -44,14 +42,20 @@ public class GameSessionExecutorServiceImpl implements GameSessionExecutorServic
         for (Question question : questions) {
             if (question == null) continue;
 
-            session.setStatus(GameSession.SessionStatus.IN_PROGRESS);
-            gameSessionRepository.save(session);
-            gameEventsRealTimeService.sendNextQuestion(session.getId());
+            GameSession sessionLocal = gameSessionRepository.findById(sessionId)
+                    .orElseThrow(() -> new RuntimeException("Session not found"));
+
+            sessionLocal.setStatus(GameSession.SessionStatus.IN_PROGRESS);
+            gameSessionRepository.save(sessionLocal);
+
+            gameEventsRealTimeService.sendNextQuestion(sessionLocal.getId());
             sleepSeconds(roundTime);
 
-            session.setStatus(GameSession.SessionStatus.SHOWING_LEADERBOARD);
-            gameSessionRepository.save(session);
-            gameEventsRealTimeService.sendLeaderBoardToSession(session.getId());
+            sessionLocal = gameSessionRepository.findById(sessionId)
+                    .orElseThrow(() -> new RuntimeException("Session not found"));
+            sessionLocal.setStatus(GameSession.SessionStatus.SHOWING_LEADERBOARD);
+            gameSessionRepository.save(sessionLocal);
+            gameEventsRealTimeService.sendLeaderBoardToSession(sessionLocal.getId());
             sleepSeconds(cooldownTime);
         }
 
