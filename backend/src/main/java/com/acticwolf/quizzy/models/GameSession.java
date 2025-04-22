@@ -49,7 +49,7 @@ public class GameSession {
     @Column(name = "round_cooldown_time")
     private Integer roundCooldownTime = 10;
 
-    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Player> players = new ArrayList<>();
 
     public enum SessionStatus {
