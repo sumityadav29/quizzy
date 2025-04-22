@@ -69,7 +69,7 @@ CREATE TABLE public.game_sessions (
 	ended_at timestamp NULL,
 	room_code varchar(6) NOT NULL,
 	created_at timestamp DEFAULT now() NOT NULL,
-	winner serial4 NULL,
+	winner int4 NULL,
 	round_time int4 DEFAULT 15 NULL,
 	round_cooldown_time int4 DEFAULT 5 NULL,
 	CONSTRAINT game_sessions_pkey PRIMARY KEY (id),
