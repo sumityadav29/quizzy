@@ -25,12 +25,7 @@ const JoinExistingGamePage: React.FC = () => {
       const res = await api.joinSessionByRoomCode(roomCode.trim().toUpperCase(), requestBody);
       const data: JoinGameSessionResponseDto = res.data;
 
-      // localStorage.setItem('playerToken', data.playerToken || '');
-      // localStorage.setItem('playerId', String(data.playerId));
-      // localStorage.setItem('nickname', data.nickname || '');
-      // localStorage.setItem('roomCode', roomCode.toUpperCase());
-
-      setSession({playerToken: data.playerToken, roomCode: roomCode.toUpperCase(), nickname: data.nickname || ''});
+      setSession({playerToken: data.playerToken, roomCode: roomCode.toUpperCase(), nickname: data.nickname || '', sessionId: String(data.gameSessionId)});
 
       navigate('/game');
     } catch (err) {
