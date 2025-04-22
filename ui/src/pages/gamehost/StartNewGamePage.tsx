@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 import {
   GameSessionControllerApi,
   QuizControllerApi,
@@ -7,6 +6,7 @@ import {
   PaginatedQuizResponseDto,
 } from '../../api/quizzy';
 import './StartNewGamePage.css';
+import { useSession } from '../../contexts/SessionContext';
 
 const StartNewGamePage: React.FC = () => {
   const [paginatedQuizzes, setPaginatedQuizzes] = useState<PaginatedQuizResponseDto>({});
@@ -17,6 +17,8 @@ const StartNewGamePage: React.FC = () => {
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<number | null>(null);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
+
+  const { setSession } = useSession();
 
 
   const quizApi = new QuizControllerApi();
@@ -46,8 +48,11 @@ const StartNewGamePage: React.FC = () => {
 
       setRoomCode(res.data.roomCode || '');
       setSessionId(res.data.id || null);
-      localStorage.setItem('roomCode', res.data.roomCode || '');
-      localStorage.setItem('sessionId', String(res.data.id));
+      // localStorage.setItem('roomCode', res.data.roomCode || '');
+      // localStorage.setItem('sessionId', String(res.data.id));
+
+      setSession({ sessionId: String(res.data.id), roomCode: res.data.roomCode });
+      
     } catch (err) {
       setError('Failed to create game session.');
     }

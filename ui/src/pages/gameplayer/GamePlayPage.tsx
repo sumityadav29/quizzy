@@ -8,6 +8,7 @@ import {
 } from '../../api/quizzy';
 
 import LeaderboardPage from '../../components/LeaderboardPage';
+import { useSession } from '../../contexts/SessionContext';
 
 import './GamePlayPage.css';
 
@@ -23,11 +24,7 @@ const GamePlayPage: React.FC = () => {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntryDto[]>([]);
 
-  const sessionId = localStorage.getItem('sessionId');
-  const playerToken = localStorage.getItem('playerToken');
-  const roomCode = localStorage.getItem('roomCode');
-
-  // const isHost = localStorage.getItem('isHost') === 'true';
+  const { sessionId, playerToken, roomCode } = useSession();
 
   const sessionApi = new GameSessionControllerApi();
 
@@ -85,7 +82,17 @@ const GamePlayPage: React.FC = () => {
   }, [roomCode, playerToken, sessionId]);
 
   const handleAnswer = async (index: number) => {
-    if (answered || selectedIndex !== null || !sessionId || !playerToken || !question?.id || !canSubmit) return;
+    if (answered || selectedIndex !== null || !sessionId || !playerToken || !question?.id || !canSubmit) {
+      console.log('Answer cannot be submitted:', {
+        answered,
+        selectedIndex,
+        sessionId,
+        playerToken,
+        questionId: question?.id,
+        canSubmit
+      });
+      return;
+    }
 
     setSelectedIndex(index);
     setAnswered(true);

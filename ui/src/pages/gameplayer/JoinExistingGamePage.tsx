@@ -6,12 +6,14 @@ import {
   JoinGameSessionResponseDto,
 } from '../../api/quizzy';
 import './JoinExistingGamePage.css';
+import { useSession } from '../../contexts/SessionContext';
 
 const JoinExistingGamePage: React.FC = () => {
   const [nickname, setNickname] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { setSession } = useSession();
   const api = new GameSessionControllerApi();
 
   const handleJoin = async (e: React.FormEvent) => {
@@ -23,10 +25,12 @@ const JoinExistingGamePage: React.FC = () => {
       const res = await api.joinSessionByRoomCode(roomCode.trim().toUpperCase(), requestBody);
       const data: JoinGameSessionResponseDto = res.data;
 
-      localStorage.setItem('playerToken', data.playerToken || '');
-      localStorage.setItem('playerId', String(data.playerId));
-      localStorage.setItem('nickname', data.nickname || '');
-      localStorage.setItem('roomCode', roomCode.toUpperCase());
+      // localStorage.setItem('playerToken', data.playerToken || '');
+      // localStorage.setItem('playerId', String(data.playerId));
+      // localStorage.setItem('nickname', data.nickname || '');
+      // localStorage.setItem('roomCode', roomCode.toUpperCase());
+
+      setSession({playerToken: data.playerToken, roomCode: roomCode.toUpperCase(), nickname: data.nickname || ''});
 
       navigate('/game');
     } catch (err) {
