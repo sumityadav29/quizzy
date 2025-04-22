@@ -3,6 +3,7 @@ package com.acticwolf.quizzy.services.gamesession;
 import com.acticwolf.quizzy.dtos.gamesession.*;
 import com.acticwolf.quizzy.models.*;
 import com.acticwolf.quizzy.repositories.*;
+import com.acticwolf.quizzy.scoring.ScoringStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.*;
 public class GameSessionServiceImpl implements GameSessionService {
 
     private final QuizRepository quizRepository;
+    private final ScoringStrategy scoringStrategy;
     private final PlayerRepository playerRepository;
     private final GameSessionRepository gameSessionRepository;
     private final GameSessionExecutorService gameSessionExecutorService;
@@ -131,18 +133,11 @@ public class GameSessionServiceImpl implements GameSessionService {
         int responseTime = (int) Math.min(elapsedTime, Integer.MAX_VALUE);
         answer.setResponseTime(responseTime);
 
-        int baseScore = 500;
-        int secondsTaken = responseTime / 1000;
-        int penalty = secondsTaken * 2;
-
-        int scoreForCurrentQuestion = isCorrect ? Math.max(0, baseScore - penalty) : 0;
+        int scoreForCurrentQuestion = scoringStrategy.calculateScore(session, currentQuestion, player, isCorrect, responseTime);
         answer.setScore(scoreForCurrentQuestion);
 
-        System.out.println("Scoring debug:");
-        System.out.println("Elapsed time (ms): " + responseTime);
-        System.out.println("Seconds taken: " + secondsTaken);
-        System.out.println("Penalty: " + penalty);
-        System.out.println("Final score: " + scoreForCurrentQuestion);
+        answer.setScore(scoreForCurrentQuestion);
+
 
         gameSessionAnswerRepository.save(answer);
 
