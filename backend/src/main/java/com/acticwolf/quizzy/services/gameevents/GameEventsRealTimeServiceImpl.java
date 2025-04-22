@@ -3,6 +3,7 @@ package com.acticwolf.quizzy.services.gameevents;
 import com.acticwolf.quizzy.dtos.gameevents.LeaderboardEntryDto;
 import com.acticwolf.quizzy.dtos.gameevents.LiveQuestionResponseDto;
 import com.acticwolf.quizzy.models.GameSession;
+import com.acticwolf.quizzy.models.Player;
 import com.acticwolf.quizzy.models.Question;
 import com.acticwolf.quizzy.repositories.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,10 +22,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GameEventsRealTimeServiceImpl implements GameEventsRealTimeService {
 
-    private final GameSseService gameSseService;
     private final ObjectMapper objectMapper;
+    private final GameSseService gameSseService;
     private final QuestionRepository questionRepository;
     private final GameSessionRepository gameSessionRepository;
+    private final GameSessionAnswerRepository gameSessionAnswerRepository;
 
     public enum GameEvent {
         QUIZ_STARTED,
@@ -98,8 +100,18 @@ public class GameEventsRealTimeServiceImpl implements GameEventsRealTimeService 
         GameSession session = gameSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("Game session not found"));
 
-        return session.getPlayers().stream()
-                .map(player -> new LeaderboardEntryDto(player.getNickname(), player.getScore()))
+        List<Player> players = session.getPlayers();
+
+        return players.stream()
+                .map(player -> {
+                    int totalScore = gameSessionAnswerRepository
+                            .findByPlayerId(player.getId())
+                            .stream()
+                            .mapToInt(answer -> answer.getScore() != null ? answer.getScore() : 0)
+                            .sum();
+
+                    return new LeaderboardEntryDto(player.getNickname(), totalScore);
+                })
                 .sorted(Comparator.comparingInt(LeaderboardEntryDto::getScore).reversed())
                 .collect(Collectors.toList());
     }

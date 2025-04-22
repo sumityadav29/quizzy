@@ -55,6 +55,7 @@ public class GameSessionExecutorServiceImpl implements GameSessionExecutorServic
                     .orElseThrow(() -> new RuntimeException("Session not found"));
             sessionLocal.setStatus(GameSession.SessionStatus.SHOWING_LEADERBOARD);
             gameSessionRepository.save(sessionLocal);
+
             gameEventsRealTimeService.sendLeaderBoardToSession(sessionLocal.getId());
             sleepSeconds(cooldownTime);
         }

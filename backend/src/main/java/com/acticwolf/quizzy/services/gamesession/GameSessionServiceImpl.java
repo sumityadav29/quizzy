@@ -85,6 +85,9 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     @Override
     public SubmitAnswerResponseDto submitAnswer(Integer sessionId, Integer questionId, SubmitAnswerRequestDto requestDto) {
+        System.out.println("submitAnswer called with sessionId = " + sessionId + ", questionId = " + questionId);
+        System.out.println("Player token = " + requestDto.getPlayerToken() + ", selectedIndex = " + requestDto.getSelectedIndex());
+
         GameSession session = gameSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
 
@@ -123,23 +126,35 @@ public class GameSessionServiceImpl implements GameSessionService {
         answer.setSelectedIndex(requestDto.getSelectedIndex());
         answer.setIsCorrect(isCorrect);
         answer.setSubmittedAt(new Timestamp(System.currentTimeMillis()));
+
         long elapsedTime = System.currentTimeMillis() - session.getStartedAt().getTime();
-        answer.setResponseTime((int) Math.min(elapsedTime, Integer.MAX_VALUE));
+        int responseTime = (int) Math.min(elapsedTime, Integer.MAX_VALUE);
+        answer.setResponseTime(responseTime);
 
-        int baseScore = 10;
-        int penaltyPer500ms = (int) Math.floor(elapsedTime / 500.0);
-        int scoreForCurrentQuestion = isCorrect ? Math.max(0, baseScore - penaltyPer500ms) : 0;
+        int baseScore = 500;
+        int secondsTaken = responseTime / 1000;
+        int penalty = secondsTaken * 2;
 
+        int scoreForCurrentQuestion = isCorrect ? Math.max(0, baseScore - penalty) : 0;
         answer.setScore(scoreForCurrentQuestion);
+
+        System.out.println("Scoring debug:");
+        System.out.println("Elapsed time (ms): " + responseTime);
+        System.out.println("Seconds taken: " + secondsTaken);
+        System.out.println("Penalty: " + penalty);
+        System.out.println("Final score: " + scoreForCurrentQuestion);
 
         gameSessionAnswerRepository.save(answer);
 
-        player.setScore(player.getScore() + scoreForCurrentQuestion);
+        int newPlayerScore = player.getScore() + scoreForCurrentQuestion;
+        player.setScore(newPlayerScore);
         playerRepository.save(player);
+
+        System.out.println("Updated player score: " + newPlayerScore);
 
         return SubmitAnswerResponseDto.builder()
                 .correct(isCorrect)
-                .responseTime(answer.getResponseTime())
+                .responseTime(responseTime)
                 .build();
     }
 
