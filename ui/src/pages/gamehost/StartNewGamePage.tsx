@@ -14,7 +14,10 @@ const StartNewGamePage: React.FC = () => {
   const [roundTime, setRoundTime] = useState<number>(15);
   const [cooldownTime, setCooldownTime] = useState<number>(5);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [roomCode, setRoomCode] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<number | null>(null);
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+
 
   const quizApi = new QuizControllerApi();
   const sessionApi = new GameSessionControllerApi();
@@ -23,9 +26,10 @@ const StartNewGamePage: React.FC = () => {
     quizApi.getAllQuizzes().then((res) => setPaginatedQuizzes(res.data));
   }, []);
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const handleCreateRoom = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setRoomCode(null);
 
     if (!selectedQuizId) {
       setError('Please select a quiz to host.');
@@ -40,20 +44,33 @@ const StartNewGamePage: React.FC = () => {
       };
       const res = await sessionApi.createSession(req);
 
-    //   localStorage.setItem('isHost', 'true');
+      setRoomCode(res.data.roomCode || '');
+      setSessionId(res.data.id || null);
       localStorage.setItem('roomCode', res.data.roomCode || '');
       localStorage.setItem('sessionId', String(res.data.id));
-
-      navigate('/game');
     } catch (err) {
       setError('Failed to create game session.');
+    }
+  };
+
+  const handleStartGame = async () => {
+    if (!sessionId) {
+      setError('Session not found.');
+      return;
+    }
+
+    try {
+      await sessionApi.startSession(sessionId);
+      setGameStarted(true);
+    } catch (err) {
+      setError('Failed to start the game.');
     }
   };
 
   return (
     <div className="start-game-container">
       <h2>Start a New Game</h2>
-      <form className="start-game-form" onSubmit={handleCreate}>
+      <form className="start-game-form" onSubmit={handleCreateRoom}>
         <div className="form-group">
           <label htmlFor="quizSelect">Select Quiz </label>
           <select
@@ -98,11 +115,20 @@ const StartNewGamePage: React.FC = () => {
         </div>
 
         <button type="submit" className="submit-btn">
-          Start Game
+          Create Room
         </button>
       </form>
 
       {error && <p className="start-game-error">{error}</p>}
+
+      {roomCode && (
+        <div className="room-code-container">
+          <p>Your room code: <strong>{roomCode}</strong></p>
+          <button onClick={handleStartGame} className="start-game-btn" disabled={gameStarted}>
+            {gameStarted ? 'Game Started' : 'Start Game'}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

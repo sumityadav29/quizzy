@@ -32,7 +32,7 @@
     border-color: #888;
   }
   
-  .start-game-form button {
+  .start-game-form button, .start-game-btn {
     padding: 0.75rem;
     font-size: 1rem;
     background-color: #222;
