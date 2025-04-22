@@ -20,6 +20,7 @@ const GamePlayPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [canSubmit, setCanSubmit] = useState<boolean>(true);
+  const [questionShownAt, setQuestionShownAt] = useState<number | null>(null);
 
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntryDto[]>([]);
@@ -55,10 +56,10 @@ const GamePlayPage: React.FC = () => {
       setSelectedIndex(null);
       setAnswered(false);
       setResponse(null);
-
       setTimeRemaining(data.maximumAllowedTime || 15);
       setCanSubmit(true);
-
+      setQuestionShownAt(Date.now());
+    
       const timer = setInterval(() => {
         setTimeRemaining((prev) => {
           if (prev <= 1) {
@@ -93,19 +94,22 @@ const GamePlayPage: React.FC = () => {
       });
       return;
     }
-
     setSelectedIndex(index);
     setAnswered(true);
-
+    const responseTimeInSec = questionShownAt ? Math.floor((Date.now() - questionShownAt) / 1000) : null;
+  
     try {
       const req: SubmitAnswerRequestDto = {
         playerToken,
         selectedIndex: index,
       };
-
+  
       const res = await sessionApi.submitAnswer(Number(sessionId), question.id, req);
-
-      setResponse(res.data);
+  
+      setResponse({
+        ...res.data,
+        responseTime: responseTimeInSec ? responseTimeInSec * 1000 : res.data.responseTime,
+      });
     } catch (err) {
       setError('Failed to submit answer.');
     }
@@ -174,7 +178,7 @@ const GamePlayPage: React.FC = () => {
   
           {answered && response && (
             <p className="result-text">
-              {response.correct ? '✅ Correct!' : '❌ Incorrect.'} Response time: {response.responseTime}ms
+              {response.correct ? '✅ Correct!' : '❌ Incorrect.'} Response time: {(response.responseTime ?? 0) / 1000}s
             </p>
           )}
 
