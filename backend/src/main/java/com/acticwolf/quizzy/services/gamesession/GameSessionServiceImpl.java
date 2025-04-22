@@ -17,8 +17,8 @@ public class GameSessionServiceImpl implements GameSessionService {
     private final QuizRepository quizRepository;
     private final PlayerRepository playerRepository;
     private final GameSessionRepository gameSessionRepository;
+    private final GameSessionExecutorService gameSessionExecutorService;
     private final GameSessionAnswerRepository gameSessionAnswerRepository;
-    private final GameSessionExecutorServiceImpl gameSessionExecutorService;
 
     @Override
     public CreateGameSessionResponseDto createSession(CreateGameSessionRequestDto requestDto) {
@@ -67,6 +67,7 @@ public class GameSessionServiceImpl implements GameSessionService {
                 .playerId(player.getId())
                 .playerToken(player.getPlayerToken())
                 .nickname(player.getNickname())
+                .gameSessionId(session.getId())
                 .build();
     }
 
@@ -79,7 +80,7 @@ public class GameSessionServiceImpl implements GameSessionService {
             throw new IllegalStateException("Only sessions in WAITING state can be started");
         }
 
-        new Thread(() -> gameSessionExecutorService.runQuizSession(session)).start();
+        gameSessionExecutorService.runQuizSession(sessionId);
     }
 
     @Override

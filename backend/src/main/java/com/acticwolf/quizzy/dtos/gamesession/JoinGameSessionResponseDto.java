@@ -13,4 +13,5 @@ public class JoinGameSessionResponseDto {
     private Integer playerId;
     private String playerToken;
     private String nickname;
+    private Integer gameSessionId;
 }

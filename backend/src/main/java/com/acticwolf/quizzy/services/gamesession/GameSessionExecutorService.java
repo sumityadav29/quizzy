@@ -4,6 +4,6 @@ import com.acticwolf.quizzy.models.GameSession;
 
 public interface GameSessionExecutorService {
 
-    public void runQuizSession(GameSession session);
+    public void runQuizSession(Integer sessionId);
 
 }

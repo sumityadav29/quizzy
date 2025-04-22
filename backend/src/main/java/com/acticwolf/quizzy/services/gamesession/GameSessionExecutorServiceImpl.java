@@ -9,7 +9,9 @@ import com.acticwolf.quizzy.services.gameevents.GameEventsRealTimeService;
 import com.acticwolf.quizzy.services.gameevents.GameEventsRealTimeServiceImpl;
 import com.acticwolf.quizzy.services.gameevents.GameSseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -23,7 +25,11 @@ public class GameSessionExecutorServiceImpl implements GameSessionExecutorServic
     private final GameSessionRepository gameSessionRepository;
     private final GameEventsRealTimeService gameEventsRealTimeService;
 
-    public void runQuizSession(GameSession session) {
+    @Async
+    public void runQuizSession(Integer sessionId) {
+        GameSession session = gameSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
+
         session.setStatus(GameSession.SessionStatus.IN_PROGRESS);
         session.setStartedAt(new Timestamp(System.currentTimeMillis()));
         session.setCurrentQuestion(null);
